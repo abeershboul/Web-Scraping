@@ -34,16 +34,17 @@ def get_citations_needed_report():
     soup=BeautifulSoup(page.content,'html.parser')
     #print(soup)
     all=soup.find_all('p')
-    results=[]
-    c=0
+    results=""
+    
     for p in all:
         if p.find('a', title = 'Wikipedia:Citation needed'):
             
-            p=p.text.strip().replace('[citation needed]','')
-            c+=1
-            results.append(p)
-    #print(results) 
-    print(c) 
+            results+=p.text.strip()
+            results+='\n'
+    print(results) 
+    return results        
+    
+def add_file(results):     
     json_data=json.dumps(results)
     with open('citations_needed.json','w') as file:
         for par in results:
@@ -52,9 +53,11 @@ def get_citations_needed_report():
             file.write('"]')
           
 
-    return results 
+     
     
 get_citations_needed_count()
 print('---------------------------------------------')
 get_citations_needed_report()
+result=get_citations_needed_report()
+add_file(result)
 
